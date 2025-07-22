@@ -19,11 +19,11 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
     scene.physics.add.existing(this);
     
     // Set enemy sprite size (remove tint since we're using actual images)
-    this.setDisplaySize(32, 32);
+    this.setDisplaySize(100, 100); // 32에서 100으로 증가
     
     // Set physics properties
     const body = this.body as Phaser.Physics.Arcade.Body;
-    body.setSize(25, 25);
+    body.setSize(80, 80); // 충돌 박스도 크기에 맞게 조정
     body.setVelocityY(GAME_CONFIG.ENEMY.SPEED);
     
     // Random fire timing

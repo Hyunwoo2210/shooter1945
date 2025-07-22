@@ -9,7 +9,7 @@ export const GAME_CONFIG = {
   },
   
   ENEMY: {
-    SPEED: 100,
+    SPEED: 60, // 100에서 60으로 감소 (40% 속도 감소)
     SPAWN_RATE: 1000, // milliseconds - 더 빠르게 생성
     FIRE_RATE: 1500,
   },
