@@ -138,8 +138,15 @@ export class PlaneGenerator {
   }
 
   static generateBossPlane(type: number): string {
-    const width = 150; // 보스 크기
-    const height = 150;
+    let width = 150; // 기본 보스 크기
+    let height = 150;
+    
+    // boss2는 더 큰 사이즈
+    if (type === 2) {
+      width = 250;
+      height = 250;
+    }
+    
     this.initCanvas(width, height);
 
     // Clear canvas
@@ -161,15 +168,15 @@ export class PlaneGenerator {
         break;
 
       case 2:
-        // Boss 2 - Massive Green Battleship
+        // Boss 2 - Massive Green Battleship (250x250 크기)
         this.ctx.fillStyle = '#006400'; // Dark green
-        this.ctx.fillRect(60, 30, 30, 90); // Main fuselage
-        this.ctx.fillRect(25, 65, 100, 25); // Wings
-        this.ctx.fillRect(15, 72, 20, 11); // Wing extensions
-        this.ctx.fillRect(115, 72, 20, 11);
+        this.ctx.fillRect(100, 50, 50, 150); // Main fuselage (크기 확대)
+        this.ctx.fillRect(42, 108, 166, 42); // Wings (크기 확대)
+        this.ctx.fillRect(25, 120, 33, 18); // Wing extensions (크기 확대)
+        this.ctx.fillRect(192, 120, 33, 18);
         this.ctx.fillStyle = '#228B22'; // Forest green details
-        this.ctx.fillRect(67, 35, 16, 35); // Cockpit area
-        this.ctx.fillRect(55, 78, 40, 10); // Engine details
+        this.ctx.fillRect(112, 58, 26, 58); // Cockpit area (크기 확대)
+        this.ctx.fillRect(92, 130, 66, 17); // Engine details (크기 확대)
         break;
     }
 

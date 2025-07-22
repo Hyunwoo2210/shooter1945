@@ -21,8 +21,13 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
     
     // Set health based on enemy type
     if (this.isBoss) {
-      this.health = 30; // 5에서 30으로 증가
-      this.maxHealth = 30;
+      if (selectedType === 'boss2') {
+        this.health = 50; // boss2는 50발
+        this.maxHealth = 50;
+      } else {
+        this.health = 30; // boss1은 30발
+        this.maxHealth = 30;
+      }
     } else {
       this.health = 1;
       this.maxHealth = 1;
@@ -34,7 +39,11 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
     
     // Set enemy sprite size based on type
     if (this.isBoss) {
-      this.setDisplaySize(150, 150); // 보스 크기
+      if (selectedType === 'boss2') {
+        this.setDisplaySize(250, 250); // boss2는 250x250
+      } else {
+        this.setDisplaySize(150, 150); // boss1은 150x150
+      }
     } else {
       this.setDisplaySize(100, 100); // 일반 적 크기
     }
@@ -42,8 +51,13 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
     // Set physics properties
     const body = this.body as Phaser.Physics.Arcade.Body;
     if (this.isBoss) {
-      body.setSize(120, 120); // 보스 충돌 박스
-      body.setVelocityY(GAME_CONFIG.ENEMY.SPEED * 0.5); // 보스는 더 느리게
+      if (selectedType === 'boss2') {
+        body.setSize(200, 200); // boss2 충돌 박스
+        body.setVelocityY(GAME_CONFIG.ENEMY.SPEED * 0.3); // boss2는 더 느리게
+      } else {
+        body.setSize(120, 120); // boss1 충돌 박스
+        body.setVelocityY(GAME_CONFIG.ENEMY.SPEED * 0.5); // boss1 속도
+      }
     } else {
       body.setSize(80, 80); // 일반 적 충돌 박스
       body.setVelocityY(GAME_CONFIG.ENEMY.SPEED);
@@ -87,7 +101,14 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
     
     if (this.health <= 0) {
       // Emit score event - bosses give more points
-      const points = this.isBoss ? 1500 : 100; // 보스 점수를 500에서 1500으로 증가
+      let points = 100; // 일반 적
+      if (this.isBoss) {
+        if (this.enemyType === 'boss2') {
+          points = 2500; // boss2: 50발이므로 더 높은 점수
+        } else {
+          points = 1500; // boss1: 30발
+        }
+      }
       this.scene.events.emit('enemy-destroyed', points);
       
       // Destruction effect
