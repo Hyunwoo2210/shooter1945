@@ -13,6 +13,17 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
-    assetsDir: 'assets'
+    assetsDir: 'assets',
+    sourcemap: false,
+    minify: 'esbuild', // terser 대신 esbuild 사용
+    rollupOptions: {
+      output: {
+        manualChunks: undefined
+      }
+    }
+  },
+  esbuild: {
+    // TypeScript 타입 체크를 ESBuild에서 처리하도록 설정
+    target: 'esnext'
   }
 })
