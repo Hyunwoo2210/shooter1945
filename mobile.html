@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮 Shooter 1945 - 모바일 접속</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        .qr-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: inline-block;
+        }
+        .network-info {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .url-box {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            color: #00ff00;
+            margin: 10px 0;
+            border: 2px solid #00ff00;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            margin: 10px;
+            background: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        .btn:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        .troubleshoot {
+            text-align: left;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Shooter 1945</h1>
+        <h2>📱 모바일 접속 가이드</h2>
+        
+        <div class="network-info">
+            <h3>🌐 네트워크 주소</h3>
+            <div class="url-box" id="networkUrl">
+                http://192.168.120.3:5173/
+            </div>
+            <p>위 주소를 모바일 브라우저에 입력하거나 QR 코드를 스캔하세요!</p>
+        </div>
+
+        <div class="qr-container">
+            <div id="qrcode"></div>
+            <p style="color: #333; margin-top: 15px;">QR 코드로 쉽게 접속하세요!</p>
+        </div>
+
+        <div>
+            <a href="/" class="btn">🎮 게임 바로가기</a>
+            <a href="/test.html" class="btn">🔧 연결 테스트</a>
+        </div>
+
+        <div class="troubleshoot">
+            <h3>🔧 문제 해결</h3>
+            <ul>
+                <li><strong>연결이 안 될 때:</strong>
+                    <ul>
+                        <li>PC와 모바일이 같은 WiFi에 연결되어 있는지 확인</li>
+                        <li>모바일 브라우저에서 JavaScript가 활성화되어 있는지 확인</li>
+                        <li>Chrome, Firefox, Safari 등 다른 브라우저 시도</li>
+                    </ul>
+                </li>
+                <li><strong>게임이 느릴 때:</strong>
+                    <ul>
+                        <li>WiFi 신호 강도 확인</li>
+                        <li>다른 앱들 종료</li>
+                        <li>브라우저 캐시 삭제</li>
+                    </ul>
+                </li>
+                <li><strong>터치 조작:</strong>
+                    <ul>
+                        <li>화면 터치로 이동</li>
+                        <li>자동 사격 기능 지원</li>
+                        <li>가로/세로 모드 모두 지원</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <div class="network-info">
+            <h3>💡 다른 접속 방법</h3>
+            <p>로컬 네트워크 접속이 안 되면 다음 주소들도 시도해보세요:</p>
+            <div class="url-box">http://localhost:5173/ (PC에서만)</div>
+            <div class="url-box">http://127.0.0.1:5173/ (PC에서만)</div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script>
+        // QR 코드 생성
+        const url = 'http://192.168.120.3:5173/';
+        QRCode.toCanvas(document.getElementById('qrcode'), url, {
+            width: 200,
+            height: 200,
+            colorDark: '#000000',
+            colorLight: '#ffffff'
+        }, function (error) {
+            if (error) {
+                console.error(error);
+                document.getElementById('qrcode').innerHTML = '<p>QR 코드 생성 실패</p>';
+            }
+        });
+
+        // 실시간으로 현재 URL 업데이트
+        if (window.location.hostname !== 'localhost') {
+            const currentUrl = window.location.origin + '/';
+            document.getElementById('networkUrl').textContent = currentUrl;
+            
+            // QR 코드도 현재 URL로 다시 생성
+            QRCode.toCanvas(document.getElementById('qrcode'), currentUrl, {
+                width: 200,
+                height: 200,
+                colorDark: '#000000',
+                colorLight: '#ffffff'
+            });
+        }
+    </script>
+</body>
+</html>

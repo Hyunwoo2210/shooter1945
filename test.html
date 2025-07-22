@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>연결 테스트</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+            background: #1a1a1a;
+            color: white;
+        }
+        .status {
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+        .success { background: #2d5a2d; }
+        .info { background: #2d2d5a; }
+    </style>
+</head>
+<body>
+    <h1>🛜 네트워크 연결 테스트</h1>
+    
+    <div class="status success">
+        <h2>✅ 연결 성공!</h2>
+        <p>모바일에서 PC의 게임 서버에 성공적으로 연결되었습니다.</p>
+    </div>
+
+    <div class="status info">
+        <h3>📱 현재 접속 정보</h3>
+        <p><strong>서버 주소:</strong> <span id="serverUrl"></span></p>
+        <p><strong>사용자 에이전트:</strong> <span id="userAgent"></span></p>
+        <p><strong>화면 크기:</strong> <span id="screenSize"></span></p>
+    </div>
+
+    <div>
+        <h3>🎮 게임 시작하기</h3>
+        <a href="/" style="color: #4CAF50; text-decoration: none; font-size: 18px; border: 2px solid #4CAF50; padding: 10px 20px; border-radius: 5px; display: inline-block; margin: 10px;">
+            🚀 Shooter 1945 게임 플레이
+        </a>
+    </div>
+
+    <script>
+        document.getElementById('serverUrl').textContent = window.location.origin;
+        document.getElementById('userAgent').textContent = navigator.userAgent;
+        document.getElementById('screenSize').textContent = `${screen.width} x ${screen.height}`;
+    </script>
+</body>
+</html>

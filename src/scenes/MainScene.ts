@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { GAME_CONFIG } from '../config/GameConfig';
 import { SpriteGenerator } from '../utils/SpriteGenerator';
 import { PlaneGenerator } from '../utils/PlaneGenerator';
+import { MobileUI } from '../utils/MobileUI';
 import SoundManager from '../utils/SoundManager';
 import Player from '../objects/Player';
 import Enemy from '../objects/Enemy';
@@ -16,6 +17,7 @@ export default class MainScene extends Phaser.Scene {
   private explosions?: Phaser.GameObjects.Group;
   private clouds?: Phaser.GameObjects.Group;
   private bombs?: Phaser.GameObjects.Group;
+  private mobileUI?: MobileUI;
   
   private cursors?: Phaser.Types.Input.Keyboard.CursorKeys;
   private wasdKeys?: any;
@@ -200,6 +202,14 @@ export default class MainScene extends Phaser.Scene {
       this.events.on('enemy-destroyed', (points: number) => {
         this.score += points;
         this.scoreText?.setText(`Score: ${this.score}`);
+      });
+      
+      // Setup mobile UI
+      this.mobileUI = new MobileUI(this);
+      
+      // Setup bomb event
+      this.events.on('bomb-used', () => {
+        this.useBomb();
       });
       
       // Start background music
@@ -530,6 +540,10 @@ export default class MainScene extends Phaser.Scene {
     this.time.delayedCall(2000, () => {
       this.detonateAllBombs();
     });
+  }
+  
+  private useBomb(): void {
+    this.createBomb();
   }
   
   private detonateAllBombs(): void {

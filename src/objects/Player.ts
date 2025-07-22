@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { GAME_CONFIG, KEYS } from '../config/GameConfig';
+import MobileControls from '../utils/MobileControls';
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
@@ -7,6 +8,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   private spaceKey!: Phaser.Input.Keyboard.Key;
   private lastFireTime: number = 0;
   private health: number;
+  private mobileControls?: MobileControls;
   
   constructor(scene: Phaser.Scene, x: number, y: number) {
     super(scene, x, y, 'player');
@@ -27,6 +29,9 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     
     // Setup input
     this.setupInput();
+    
+    // Setup mobile controls
+    this.mobileControls = new MobileControls(scene, this);
   }
   
   private setupInput(): void {
@@ -48,6 +53,11 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   update(time: number): void {
     this.handleMovement();
     this.handleShooting(time);
+    
+    // Update mobile controls
+    if (this.mobileControls) {
+      this.mobileControls.update(time);
+    }
   }
   
   private handleMovement(): void {
@@ -79,8 +89,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   }
   
   private isTouchControlled(): boolean {
-    // This would be controlled by the MobileControls class
-    return false; // For now, always allow keyboard control
+    // Check if mobile controls are active
+    return this.mobileControls && this.mobileControls.isActive();
   }
   
   private handleShooting(time: number): void {
