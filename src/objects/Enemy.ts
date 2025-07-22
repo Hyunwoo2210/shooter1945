@@ -21,8 +21,8 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
     
     // Set health based on enemy type
     if (this.isBoss) {
-      this.health = 5;
-      this.maxHealth = 5;
+      this.health = 30; // 5에서 30으로 증가
+      this.maxHealth = 30;
     } else {
       this.health = 1;
       this.maxHealth = 1;
@@ -87,7 +87,7 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
     
     if (this.health <= 0) {
       // Emit score event - bosses give more points
-      const points = this.isBoss ? 500 : 100;
+      const points = this.isBoss ? 1500 : 100; // 보스 점수를 500에서 1500으로 증가
       this.scene.events.emit('enemy-destroyed', points);
       
       // Destruction effect
