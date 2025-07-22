@@ -22,11 +22,11 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
     // Set health based on enemy type
     if (this.isBoss) {
       if (selectedType === 'boss2') {
-        this.health = 50; // boss2는 50발
-        this.maxHealth = 50;
+        this.health = 150; // boss2는 150발
+        this.maxHealth = 150;
       } else {
-        this.health = 30; // boss1은 30발
-        this.maxHealth = 30;
+        this.health = 50; // boss1은 50발
+        this.maxHealth = 50;
       }
     } else {
       this.health = 1;
@@ -104,9 +104,9 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
       let points = 100; // 일반 적
       if (this.isBoss) {
         if (this.enemyType === 'boss2') {
-          points = 2500; // boss2: 50발이므로 더 높은 점수
+          points = 7500; // boss2: 150발이므로 최고 점수
         } else {
-          points = 1500; // boss1: 30발
+          points = 2500; // boss1: 50발
         }
       }
       this.scene.events.emit('enemy-destroyed', points);
