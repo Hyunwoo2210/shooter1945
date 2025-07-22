@@ -112,6 +112,65 @@ export class PlaneGenerator {
         this.ctx.fillStyle = '#000000'; // Black
         this.ctx.fillRect(46, 25, 6, 19); // 크기 3배
         break;
+
+      case 6:
+        // Silver scout fighter - 크기 3배 확대
+        this.ctx.fillStyle = '#C0C0C0'; // Silver
+        this.ctx.fillRect(44, 19, 12, 62); // 크기 3배
+        this.ctx.fillRect(25, 44, 50, 8); // 크기 3배
+        this.ctx.fillStyle = '#808080'; // Gray
+        this.ctx.fillRect(46, 25, 6, 15); // 크기 3배
+        break;
+
+      case 7:
+        // Gold assault fighter - 크기 3배 확대
+        this.ctx.fillStyle = '#FFD700'; // Gold
+        this.ctx.fillRect(40, 19, 19, 62); // 크기 3배
+        this.ctx.fillRect(22, 44, 54, 10); // 크기 3배
+        this.ctx.fillStyle = '#FFA500'; // Orange
+        this.ctx.fillRect(44, 25, 12, 20); // 크기 3배
+        break;
+    }
+
+    this.ctx.restore();
+
+    return this.canvas.toDataURL();
+  }
+
+  static generateBossPlane(type: number): string {
+    const width = 150; // 보스 크기
+    const height = 150;
+    this.initCanvas(width, height);
+
+    // Clear canvas
+    this.ctx.clearRect(0, 0, width, height);
+
+    this.ctx.save();
+
+    switch (type) {
+      case 1:
+        // Boss 1 - Massive Red Destroyer
+        this.ctx.fillStyle = '#8B0000'; // Dark red
+        this.ctx.fillRect(65, 30, 20, 90); // Main fuselage
+        this.ctx.fillRect(30, 65, 90, 20); // Wings
+        this.ctx.fillRect(20, 70, 15, 10); // Wing extensions
+        this.ctx.fillRect(115, 70, 15, 10);
+        this.ctx.fillStyle = '#DC143C'; // Crimson details
+        this.ctx.fillRect(70, 35, 10, 30); // Cockpit area
+        this.ctx.fillRect(60, 75, 30, 8); // Engine details
+        break;
+
+      case 2:
+        // Boss 2 - Massive Green Battleship
+        this.ctx.fillStyle = '#006400'; // Dark green
+        this.ctx.fillRect(60, 30, 30, 90); // Main fuselage
+        this.ctx.fillRect(25, 65, 100, 25); // Wings
+        this.ctx.fillRect(15, 72, 20, 11); // Wing extensions
+        this.ctx.fillRect(115, 72, 20, 11);
+        this.ctx.fillStyle = '#228B22'; // Forest green details
+        this.ctx.fillRect(67, 35, 16, 35); // Cockpit area
+        this.ctx.fillRect(55, 78, 40, 10); // Engine details
+        break;
     }
 
     this.ctx.restore();

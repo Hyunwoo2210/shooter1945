@@ -38,7 +38,10 @@ export default class MainScene extends Phaser.Scene {
   
   private soundManager: SoundManager;
   private explosionFrames: string[] = [];
-  private enemyTypes: string[] = ['enemy1', 'enemy2', 'enemy3', 'enemy4', 'enemy5'];
+  private enemyTypes: string[] = ['enemy1', 'enemy2', 'enemy3', 'enemy4', 'enemy5', 'enemy6', 'enemy7'];
+  private bossTypes: string[] = ['boss1', 'boss2'];
+  private lastBossSpawn: number = 0;
+  private bossSpawnInterval: number = 30000; // 30초마다 보스 스폰
   
   constructor() {
     super({ key: 'MainScene' });
@@ -56,6 +59,13 @@ export default class MainScene extends Phaser.Scene {
       this.load.image('enemy3', 'assets/images/enemy3.png');
       this.load.image('enemy4', 'assets/images/enemy4.png');
       this.load.image('enemy5', 'assets/images/enemy5.png');
+      this.load.image('enemy6', 'assets/images/enemy6.png');
+      this.load.image('enemy7', 'assets/images/enemy7.png');
+      
+      // Load boss images
+      console.log('Loading boss images...');
+      this.load.image('boss1', 'assets/images/boss1.png');
+      this.load.image('boss2', 'assets/images/boss2.png');
       
       // Generate and load player sprite
       console.log('Generating player plane...');
@@ -87,6 +97,14 @@ export default class MainScene extends Phaser.Scene {
       this.createFallbackSprites();
       this.explosionFrames = ['explosion_0', 'explosion_1', 'explosion_2'];
     }
+    
+    // Generate fallback sprites for new enemies and bosses in case images don't load
+    this.load.on('loaderror', (file: any) => {
+      console.log(`Failed to load: ${file.key}, generating fallback sprite`);
+      if (file.key.startsWith('enemy') || file.key.startsWith('boss')) {
+        this.generateFallbackSprite(file.key);
+      }
+    });
   }
   
   private createFallbackSprite(key: string, color: number): void {
@@ -104,6 +122,10 @@ export default class MainScene extends Phaser.Scene {
     this.createFallbackSprite('enemy3', 0xff8888);
     this.createFallbackSprite('enemy4', 0xffaaaa);
     this.createFallbackSprite('enemy5', 0xffcccc);
+    this.createFallbackSprite('enemy6', 0xffdddd);
+    this.createFallbackSprite('enemy7', 0xffeeee);
+    this.createFallbackSprite('boss1', 0x800000);
+    this.createFallbackSprite('boss2', 0x008000);
     this.createFallbackSprite('player_bullet', 0xffff00);
     this.createFallbackSprite('enemy_bullet', 0xff0000);
     this.createFallbackSprite('bomb', 0x000000);
@@ -122,6 +144,20 @@ export default class MainScene extends Phaser.Scene {
       .fillStyle(0xffffff)
       .fillCircle(25, 25, 25)
       .generateTexture('cloud', 50, 50);
+  }
+  
+  private generateFallbackSprite(key: string): void {
+    console.log(`Generating fallback sprite for ${key}`);
+    
+    if (key.startsWith('enemy')) {
+      const enemyNumber = parseInt(key.replace('enemy', ''));
+      const enemySprite = PlaneGenerator.generateEnemyPlane(enemyNumber);
+      this.loadSpriteFromDataURL(key, enemySprite);
+    } else if (key.startsWith('boss')) {
+      const bossNumber = parseInt(key.replace('boss', ''));
+      const bossSprite = PlaneGenerator.generateBossPlane(bossNumber);
+      this.loadSpriteFromDataURL(key, bossSprite);
+    }
   }
   
   private loadSpriteFromDataURL(key: string, dataURL: string): void {
@@ -332,9 +368,16 @@ export default class MainScene extends Phaser.Scene {
   }
   
   private spawnEnemies(time: number): void {
+    // Spawn regular enemies
     if (time - this.lastEnemySpawn > GAME_CONFIG.ENEMY.SPAWN_RATE) {
       this.createEnemy();
       this.lastEnemySpawn = time;
+    }
+    
+    // Spawn boss enemies
+    if (time - this.lastBossSpawn > this.bossSpawnInterval) {
+      this.createBoss();
+      this.lastBossSpawn = time;
     }
   }
   
@@ -358,6 +401,28 @@ export default class MainScene extends Phaser.Scene {
     });
     
     this.enemies.add(enemy);
+  }
+  
+  private createBoss(): void {
+    if (!this.enemies) return;
+    
+    const x = GAME_CONFIG.WIDTH / 2; // 보스는 중앙에 스폰
+    
+    // Choose random boss type
+    const bossType = this.bossTypes[Math.floor(Math.random() * this.bossTypes.length)];
+    const boss = new Enemy(this, x, -80, bossType);
+    
+    // Add slow side-to-side movement for boss
+    this.tweens.add({
+      targets: boss,
+      x: boss.x + (Math.random() - 0.5) * 200,
+      duration: 4000,
+      yoyo: true,
+      repeat: -1,
+      ease: 'Sine.easeInOut'
+    });
+    
+    this.enemies.add(boss);
   }
   
   private updateExplosions(): void {
