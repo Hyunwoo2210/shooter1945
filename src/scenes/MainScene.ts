@@ -52,18 +52,21 @@ export default class MainScene extends Phaser.Scene {
     console.log('Preloading assets...');
     
     try {
-      // Load enemy images from files
+      // Load enemy images from files - only load existing files
       console.log('Loading enemy images...');
       this.load.image('enemy1', 'assets/images/enemy1.png');
       this.load.image('enemy2', 'assets/images/enemy2.png');
       this.load.image('enemy3', 'assets/images/enemy3.png');
       this.load.image('enemy4', 'assets/images/enemy4.png');
       this.load.image('enemy5', 'assets/images/enemy5.png');
+      
+      // Try to load new enemy images, but handle failures gracefully
+      console.log('Attempting to load new enemy images...');
       this.load.image('enemy6', 'assets/images/enemy6.png');
       this.load.image('enemy7', 'assets/images/enemy7.png');
       
-      // Load boss images
-      console.log('Loading boss images...');
+      // Try to load boss images, but handle failures gracefully
+      console.log('Attempting to load boss images...');
       this.load.image('boss1', 'assets/images/boss1.png');
       this.load.image('boss2', 'assets/images/boss2.png');
       
@@ -105,6 +108,11 @@ export default class MainScene extends Phaser.Scene {
         this.generateFallbackSprite(file.key);
       }
     });
+    
+    // Generate fallback sprites for missing images after load completes
+    this.load.on('complete', () => {
+      this.generateMissingSprites();
+    });
   }
   
   private createFallbackSprite(key: string, color: number): void {
@@ -116,16 +124,23 @@ export default class MainScene extends Phaser.Scene {
   
   private createFallbackSprites(): void {
     console.log('Creating fallback sprites...');
-    this.createFallbackSprite('player', 0x00ff00);
-    this.createFallbackSprite('enemy1', 0xff0000);
-    this.createFallbackSprite('enemy2', 0xff4444);
-    this.createFallbackSprite('enemy3', 0xff8888);
-    this.createFallbackSprite('enemy4', 0xffaaaa);
-    this.createFallbackSprite('enemy5', 0xffcccc);
-    this.createFallbackSprite('enemy6', 0xffdddd);
-    this.createFallbackSprite('enemy7', 0xffeeee);
-    this.createFallbackSprite('boss1', 0x800000);
-    this.createFallbackSprite('boss2', 0x008000);
+    
+    // Generate proper sprites instead of simple rectangles
+    const playerSprite = PlaneGenerator.generatePlayerPlane();
+    this.loadSpriteFromDataURL('player', playerSprite);
+    
+    // Generate enemy sprites 1-7
+    for (let i = 1; i <= 7; i++) {
+      const enemySprite = PlaneGenerator.generateEnemyPlane(i);
+      this.loadSpriteFromDataURL(`enemy${i}`, enemySprite);
+    }
+    
+    // Generate boss sprites
+    for (let i = 1; i <= 2; i++) {
+      const bossSprite = PlaneGenerator.generateBossPlane(i);
+      this.loadSpriteFromDataURL(`boss${i}`, bossSprite);
+    }
+    
     this.createFallbackSprite('player_bullet', 0xffff00);
     this.createFallbackSprite('enemy_bullet', 0xff0000);
     this.createFallbackSprite('bomb', 0x000000);
@@ -158,6 +173,18 @@ export default class MainScene extends Phaser.Scene {
       const bossSprite = PlaneGenerator.generateBossPlane(bossNumber);
       this.loadSpriteFromDataURL(key, bossSprite);
     }
+  }
+  
+  private generateMissingSprites(): void {
+    // Check if textures exist, if not generate fallback sprites
+    const requiredSprites = ['enemy6', 'enemy7', 'boss1', 'boss2'];
+    
+    requiredSprites.forEach(spriteKey => {
+      if (!this.textures.exists(spriteKey)) {
+        console.log(`Texture ${spriteKey} not found, generating fallback sprite`);
+        this.generateFallbackSprite(spriteKey);
+      }
+    });
   }
   
   private loadSpriteFromDataURL(key: string, dataURL: string): void {
