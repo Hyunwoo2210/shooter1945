@@ -7,13 +7,15 @@
     "dev": "vite",
     "dev-mobile": "vite --host --port 5173",
     "dev-network": "vite --host 0.0.0.0 --port 5173",
-    "build": "vite build",
+    "build": "node build.js",
+    "build-vite": "vite build",
     "build-check": "tsc --noEmit && vite build",
     "preview": "vite preview"
   },
   "devDependencies": {
     "typescript": "^5.2.2",
-    "vite": "^5.0.8"
+    "vite": "^5.0.8",
+    "@types/node": "^20.0.0"
   },
   "dependencies": {
     "phaser": "^3.80.0"
